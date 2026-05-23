@@ -19,7 +19,9 @@ function App() {
           <Toaster position="top-center" reverseOrder={false} />
           <Routes>
             <Route path="/" element={<Landing />} />
-            <Route path="/login" element={<Login />} />
+            <Route path="/login" element={<Login role="customer" />} />
+            <Route path="/login/customer" element={<Login role="customer" />} />
+            <Route path="/login/provider" element={<Login role="provider" />} />
             <Route path="/register/customer" element={<RegisterCustomer />} />
             <Route path="/register/provider" element={<RegisterProvider />} />
             <Route path="/customer/dashboard" element={<CustomerDashboard />} />

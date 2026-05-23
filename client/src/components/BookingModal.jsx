@@ -14,6 +14,11 @@ const BookingModal = ({ provider, serviceType, onClose }) => {
   const serviceDetail = (provider.services || []).find(s => s.type === serviceType);
 
   const handleBooking = () => {
+    if (!user) {
+      toast.error('Please login as a customer before booking.');
+      return;
+    }
+
     if (!date || !time) {
       toast.error('Please select date and time');
       return;
@@ -25,7 +30,7 @@ const BookingModal = ({ provider, serviceType, onClose }) => {
         providerId: provider._id,
         providerName: provider.fullName,
         customerId: user?._id,
-        customerName: user?.fullName || 'Guest Customer',
+        customerName: user.fullName,
         serviceType,
         date,
         time,

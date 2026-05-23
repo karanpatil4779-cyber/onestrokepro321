@@ -18,8 +18,11 @@ const Landing = () => {
             <Link to="/register/provider" className="bg-white border border-primary-gold text-primary-gold px-8 py-3 rounded-md hover:bg-primary-ivory transition-colors">
               Become a Provider
             </Link>
-            <Link to="/login" className="bg-charcoal text-white px-8 py-3 rounded-md hover:bg-black transition-colors">
-              Login
+            <Link to="/login/customer" className="bg-charcoal text-white px-8 py-3 rounded-md hover:bg-black transition-colors">
+              Customer Login
+            </Link>
+            <Link to="/login/provider" className="bg-white border border-charcoal text-charcoal px-8 py-3 rounded-md hover:bg-primary-ivory transition-colors">
+              Provider Login
             </Link>
           </div>
         </div>
