@@ -1,96 +1,95 @@
-import { ShieldCheck, Clock, MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { ShieldCheck, Clock, MapPin, Search } from 'lucide-react';
+import Navbar from '../components/Navbar';
+import CitySelector from '../components/CitySelector';
+import ProviderCard from '../components/ProviderCard';
+import { SERVICE_CATEGORIES } from '../data/providers';
+import { useApp } from '../context/AppContext';
+
+const seasonalCopy = () => {
+  const month = new Date().getMonth() + 1;
+  if ([5, 6].includes(month)) return 'Beat the heat! Book AC service today.';
+  if ([10, 11].includes(month)) return 'Pre-winter pest control - book now.';
+  if ([12, 1].includes(month)) return 'Cold water heater repair - priority slots available.';
+  return 'Verified home services across Indian cities.';
+};
 
 const Landing = () => {
+  const { providers, selectedCity } = useApp();
+  const featured = providers.filter((provider) => provider.city === selectedCity).slice(0, 4);
+
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
-      <header className="bg-primary-beige py-20 px-4">
-        <div className="max-w-6xl mx-auto text-center">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6">
-            One Request. <span className="text-primary-gold underline decoration-primary-gold/30">One Stroke.</span> Done.
-          </h1>
-          <p className="text-xl text-charcoal/70 mb-10 max-w-2xl mx-auto">
-            Premium on-demand services for the modern Indian home. Aadhaar-verified professionals at your doorstep.
-          </p>
-          <div className="flex flex-wrap gap-4 justify-center">
-            <Link to="/register/customer" className="gold-btn text-lg py-3 px-8">Book a Service</Link>
-            <Link to="/register/provider" className="bg-white border border-primary-gold text-primary-gold px-8 py-3 rounded-md hover:bg-primary-ivory transition-colors">
-              Become a Provider
-            </Link>
-            <Link to="/login/customer" className="bg-charcoal text-white px-8 py-3 rounded-md hover:bg-black transition-colors">
-              Customer Login
-            </Link>
-            <Link to="/login/provider" className="bg-white border border-charcoal text-charcoal px-8 py-3 rounded-md hover:bg-primary-ivory transition-colors">
-              Provider Login
-            </Link>
+      <Navbar />
+      <header className="bg-primary-beige px-4 py-16">
+        <div className="max-w-7xl mx-auto grid lg:grid-cols-[1.1fr_0.9fr] gap-10 items-center">
+          <div>
+            <p className="text-sm font-bold text-primary-gold uppercase tracking-widest mb-4">{seasonalCopy()}</p>
+            <h1 className="text-5xl md:text-7xl font-bold mb-6">OneStroke Pro</h1>
+            <p className="text-xl text-charcoal/70 mb-8 max-w-2xl">
+              Book trusted plumbers, electricians, cleaners, AC repair experts, carpenters, painters and more in your city.
+            </p>
+            <div className="max-w-2xl bg-white border border-primary-gold/10 rounded-lg p-3 flex flex-col md:flex-row gap-3">
+              <div className="flex-1 flex items-center gap-2 px-2">
+                <Search size={18} className="text-primary-gold" />
+                <input className="w-full outline-none" placeholder="Search services or providers..." onKeyDown={(e) => {
+                  if (e.key === 'Enter') window.location.href = `/services?query=${encodeURIComponent(e.currentTarget.value)}`;
+                }} />
+              </div>
+              <CitySelector compact />
+            </div>
+            <div className="flex flex-wrap gap-3 mt-6">
+              <Link to="/services" className="gold-btn text-lg py-3 px-8">Book a Service</Link>
+              <Link to="/signup" className="bg-white border border-primary-gold text-primary-gold px-8 py-3 rounded-md hover:bg-primary-ivory">Sign up</Link>
+            </div>
           </div>
+          <div className="min-h-[360px] rounded-lg overflow-hidden bg-[url('/src/assets/hero.png')] bg-cover bg-center border border-primary-gold/10" />
         </div>
       </header>
 
-      {/* Services Section */}
-      <section className="py-20 max-w-6xl mx-auto px-4">
-        <h2 className="text-4xl font-bold text-center mb-16">Our Specialized Services</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {[
-            { name: 'Driver', icon: '🚗', hindi: 'ड्राइवर' },
-            { name: 'Maid', icon: '🧹', hindi: 'कामवाली' },
-            { name: 'Cook', icon: '👨‍🍳', hindi: 'रसोइया' },
-            { name: 'Errand', icon: '📦', hindi: 'काम' },
-            { name: 'Queue', icon: '🧍', hindi: 'लाइन असिस्टेंट' },
-            { name: 'Handyman', icon: '🔧', hindi: 'मिस्त्री' },
-            { name: 'Tutor', icon: '📚', hindi: 'ट्यूटर' },
-            { name: 'Care', icon: '🏥', hindi: 'देखभाल' },
-          ].map((service) => (
-            <div key={service.name} className="beige-card text-center">
-              <span className="text-4xl mb-4 block">{service.icon}</span>
-              <h3 className="text-xl font-bold">{service.name}</h3>
-              <p className="text-sm text-charcoal/50">{service.hindi}</p>
-            </div>
+      <section className="py-14 max-w-7xl mx-auto px-4">
+        <div className="flex items-end justify-between mb-8">
+          <div>
+            <h2 className="text-3xl font-bold">Popular services in {selectedCity}</h2>
+            <p className="text-charcoal/60">Filter by service, price, rating, availability and experience.</p>
+          </div>
+          <Link to="/services" className="text-primary-gold font-bold">View all</Link>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
+          {SERVICE_CATEGORIES.map((service) => (
+            <Link key={service} to={`/services/${encodeURIComponent(service)}`} className="bg-white border border-gray-100 rounded-lg p-4 capitalize hover:border-primary-gold">
+              {service}
+            </Link>
           ))}
         </div>
       </section>
 
-      {/* Trust Section */}
-      <section className="bg-charcoal text-white py-20 px-4">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-12 text-center">
-          <div>
-            <div className="bg-primary-gold/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
-              <ShieldCheck className="text-primary-gold" size={32} />
-            </div>
-            <h3 className="text-xl font-bold mb-2">Verified Experts</h3>
-            <p className="text-white/60">Strict Aadhaar & Police verification for every provider.</p>
-          </div>
-          <div>
-            <div className="bg-primary-gold/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Clock className="text-primary-gold" size={32} />
-            </div>
-            <h3 className="text-xl font-bold mb-2">Swift Response</h3>
-            <p className="text-white/60">Book in 60 seconds. Service at your convenience.</p>
-          </div>
-          <div>
-            <div className="bg-primary-gold/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
-              <MapPin className="text-primary-gold" size={32} />
-            </div>
-            <h3 className="text-xl font-bold mb-2">Hyper-Local</h3>
-            <p className="text-white/60">Serving major Indian metros with dedicated local support.</p>
+      <section className="py-12 bg-primary-off-white">
+        <div className="max-w-7xl mx-auto px-4">
+          <h2 className="text-3xl font-bold mb-8">Featured providers</h2>
+          <div className="grid md:grid-cols-2 gap-5">
+            {featured.map((provider) => <ProviderCard key={provider.id} provider={provider} />)}
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-primary-beige py-12 px-4 border-t border-primary-gold/10">
-        <div className="max-w-6xl mx-auto text-center">
-          <h2 className="text-2xl font-playfair font-bold text-primary-gold mb-4 uppercase tracking-widest">ONESTROKE</h2>
-          <p className="text-charcoal/50 mb-8">© 2026 ONESTROKE. Built for Bharat. 🇮🇳</p>
-          <div className="flex justify-center gap-6">
-            <a href="#" className="hover:text-primary-gold">About</a>
-            <a href="#" className="hover:text-primary-gold">Privacy</a>
-            <a href="#" className="hover:text-primary-gold">Terms</a>
-            <a href="#" className="hover:text-primary-gold">Contact</a>
-          </div>
+      <section className="bg-charcoal text-white py-16 px-4">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-10 text-center">
+          {[
+            [ShieldCheck, 'Verified Experts', 'Every provider is quality checked for this demo marketplace.'],
+            [Clock, 'Fast Booking', 'Choose a slot, review the summary, and complete mock Razorpay payment.'],
+            [MapPin, 'Hyper Local', 'Providers are organized by Indian cities and neighbourhoods.'],
+          ].map(([Icon, title, text]) => (
+            <div key={title}>
+              <div className="bg-primary-gold/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-5">
+                <Icon className="text-primary-gold" size={32} />
+              </div>
+              <h3 className="text-xl font-bold mb-2">{title}</h3>
+              <p className="text-white/60">{text}</p>
+            </div>
+          ))}
         </div>
-      </footer>
+      </section>
     </div>
   );
 };

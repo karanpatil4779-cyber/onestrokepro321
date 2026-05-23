@@ -1,77 +1,47 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../context/useAuth';
-import { findUserByPhone } from '../data/localStore';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { useApp } from '../context/AppContext';
 
-const loginCopy = {
-  customer: {
-    title: 'Customer Login',
-    helper: 'Use a registered customer phone number to continue.',
-    demo: '+919000000001',
-    registerPath: '/register/customer',
-    dashboardPath: '/customer/dashboard',
-  },
-  provider: {
-    title: 'Provider Login',
-    helper: 'Use a registered provider phone number to manage your profile.',
-    demo: '+919876543210',
-    registerPath: '/register/provider',
-    dashboardPath: '/provider/dashboard',
-  },
-};
-
-const Login = ({ role = 'customer' }) => {
-  const copy = loginCopy[role];
-  const [phone, setPhone] = useState('');
-  const { setUser } = useAuth();
+const Login = () => {
+  const { setCurrentUser, selectedCity } = useApp();
   const navigate = useNavigate();
+  const location = useLocation();
+  const [phone, setPhone] = useState('');
+  const [otp, setOtp] = useState('');
+  const [sent, setSent] = useState(false);
 
-  const handleLogin = (e) => {
+  const submit = (e) => {
     e.preventDefault();
-    const user = findUserByPhone(phone.trim(), role);
-
-    if (!user) {
-      toast.error(`No ${role} account found. Please register first.`);
+    if (!/^\d{10}$/.test(phone)) {
+      toast.error('Enter any 10-digit mobile number.');
       return;
     }
-
-    setUser(user);
-    toast.success(`${role === 'provider' ? 'Provider' : 'Customer'} login successful!`);
-    navigate(copy.dashboardPath);
+    if (!sent) {
+      setSent(true);
+      toast.success('OTP sent. Use 1234 for this demo.');
+      return;
+    }
+    if (otp !== '1234') {
+      toast.error('Demo OTP is 1234.');
+      return;
+    }
+    setCurrentUser({ name: 'Karan Patil', fullName: 'Karan Patil', phone, email: 'karan@example.com', city: selectedCity, role: 'customer' });
+    toast.success('Login successful.');
+    navigate(location.state?.from || '/dashboard');
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-primary-beige p-4">
-      <div className="bg-white p-8 rounded-xl shadow-lg max-w-md w-full">
-        <h2 className="text-3xl font-bold mb-4 text-center text-primary-gold">{copy.title}</h2>
-        <p className="text-sm text-charcoal/70 mb-6 text-center">{copy.helper}</p>
-
-        <div className="mb-5 rounded-lg border border-primary-gold/20 bg-primary-ivory p-3 text-sm text-charcoal/70">
-          Demo {role} phone: <button type="button" className="font-bold text-primary-gold" onClick={() => setPhone(copy.demo)}>{copy.demo}</button>
-        </div>
-
-        <form onSubmit={handleLogin} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium mb-1">Phone Number</label>
-            <input
-              type="text"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder="+91XXXXXXXXXX"
-              className="w-full p-3 border rounded-md"
-              required
-            />
-          </div>
-          <button type="submit" className="gold-btn w-full py-3">Login</button>
+      <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
+        <h1 className="text-3xl font-bold text-primary-gold text-center mb-2">Login</h1>
+        <p className="text-center text-charcoal/60 mb-6">Use any 10-digit mobile and OTP 1234.</p>
+        <form onSubmit={submit} className="space-y-4">
+          <input className="w-full p-3 border rounded-md" value={phone} onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))} placeholder="10-digit mobile" />
+          {sent && <input className="w-full p-3 border rounded-md" value={otp} onChange={(e) => setOtp(e.target.value)} placeholder="OTP" />}
+          <button className="gold-btn w-full py-3">{sent ? 'Verify OTP' : 'Send OTP'}</button>
         </form>
-        <p className="text-center text-sm text-charcoal/70 mt-4">
-          Need an account? <Link to={copy.registerPath} className="text-primary-gold font-medium">Register here</Link>
-        </p>
-        <div className="mt-4 flex justify-center gap-4 text-sm">
-          <Link to="/login/customer" className={role === 'customer' ? 'text-primary-gold font-bold' : 'text-charcoal/50'}>Customer</Link>
-          <Link to="/login/provider" className={role === 'provider' ? 'text-primary-gold font-bold' : 'text-charcoal/50'}>Provider</Link>
-        </div>
+        <p className="text-center text-sm mt-4">New here? <Link to="/signup" className="text-primary-gold font-bold">Create account</Link></p>
       </div>
     </div>
   );
