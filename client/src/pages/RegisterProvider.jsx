@@ -72,7 +72,7 @@ const RegisterProvider = () => {
   };
 
   return (
-    <div className="min-h-screen bg-primary-beige p-6">
+    <div className="min-h-screen p-6">
       <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-xl p-8 gold-border">
         <div className="flex justify-between mb-10">
           {[0, 1, 2, 3, 4].map((i) => (

@@ -48,6 +48,10 @@
   background-color: #080807 !important;
 }
 
+.dark-theme .dark-btn-override {
+  background-color: #3b3325 !important;
+}
+
 .dark-theme .text-charcoal,
 .dark-theme .text-charcoal\/70,
 .dark-theme .text-charcoal\/60,

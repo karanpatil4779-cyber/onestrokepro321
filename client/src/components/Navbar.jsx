@@ -69,15 +69,13 @@ const Navbar = () => {
 
           <div className="flex items-center gap-3 border-l pl-3 border-gray-200">
             <div className="text-right hidden md:block">
-              <p className="text-sm font-bold">{currentUser?.name || currentUser?.fullName || 'Guest'}</p>
+              <p className="text-sm font-bold">{currentUser?.name || currentUser?.fullName || <Link to="/login" className="hover:text-primary-gold">Sign In</Link>}</p>
               <p className="text-xs text-charcoal/50">{currentUser?.city || selectedCity}</p>
             </div>
-            {currentUser ? (
+            {currentUser && (
               <button onClick={handleLogout} className="p-2 hover:bg-primary-beige rounded-full text-red-500 transition-colors" title="Logout">
                 <LogOut size={20} />
               </button>
-            ) : (
-              <Link to="/login" className="gold-btn text-sm">Login</Link>
             )}
           </div>
         </div>
