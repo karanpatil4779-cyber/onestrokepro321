@@ -21,6 +21,7 @@ export const AppProvider = ({ children }) => {
   const [reviews, setReviews] = useState(() => load(keys.reviews, []));
   const [addresses, setAddresses] = useState(() => load(keys.addresses, ['Home - Andheri West, Mumbai']));
   const [refundMessages, setRefundMessages] = useState(() => load(keys.refundMessages, []).filter((item) => Date.now() - item.createdAt < 7 * 24 * 60 * 60 * 1000));
+  const [theme, setTheme] = useState(() => load(keys.theme, 'light'));
 
   useEffect(() => save(keys.currentUser, currentUser), [currentUser]);
   useEffect(() => save(keys.selectedCity, selectedCity), [selectedCity]);
@@ -30,6 +31,10 @@ export const AppProvider = ({ children }) => {
   useEffect(() => save(keys.reviews, reviews), [reviews]);
   useEffect(() => save(keys.addresses, addresses), [addresses]);
   useEffect(() => save(keys.refundMessages, refundMessages), [refundMessages]);
+  useEffect(() => {
+    save(keys.theme, theme);
+    document.documentElement.classList.toggle('dark-theme', theme === 'dark');
+  }, [theme]);
 
   const setCurrentUser = (user) => {
     setCurrentUserState(user);
@@ -127,6 +132,8 @@ export const AppProvider = ({ children }) => {
     setAddresses,
     refundMessages,
     dismissRefundMessage,
+    theme,
+    toggleTheme: () => setTheme((mode) => (mode === 'dark' ? 'light' : 'dark')),
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

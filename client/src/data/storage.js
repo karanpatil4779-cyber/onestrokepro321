@@ -17,6 +17,7 @@ export const keys = {
   reviews: 'osp_reviews',
   addresses: 'osp_addresses',
   refundMessages: 'osp_refund_messages',
+  theme: 'osp_theme',
 };
 
 export const load = (key, fallback) => readJson(key, fallback);

@@ -1,10 +1,10 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { Bell, LogOut, MapPin } from 'lucide-react';
+import { Bell, LogOut, MapPin, Moon, Sun } from 'lucide-react';
 import { useState } from 'react';
 import { useApp } from '../context/AppContext';
 
 const Navbar = () => {
-  const { currentUser, logout, cities, selectedCity, setSelectedCity, notifications, setNotifications } = useApp();
+  const { currentUser, logout, cities, selectedCity, setSelectedCity, notifications, setNotifications, theme, toggleTheme } = useApp();
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const unread = notifications.filter((item) => !item.read).length;
@@ -27,6 +27,15 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className="p-2 rounded-full border border-gray-200 text-charcoal/70 hover:text-primary-gold hover:border-primary-gold"
+            title={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+          >
+            {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+          </button>
+
           <label className="hidden sm:flex items-center gap-2 text-sm border rounded-md px-2 py-1.5">
             <MapPin size={16} className="text-primary-gold" />
             <select className="outline-none bg-transparent" value={selectedCity} onChange={(e) => setSelectedCity(e.target.value)}>

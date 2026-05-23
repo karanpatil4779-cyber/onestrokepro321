@@ -40,7 +40,6 @@ const Landing = () => {
             </div>
             <div className="flex flex-wrap gap-3 mt-6">
               <Link to="/services" className="gold-btn text-lg py-3 px-8">Book a Service</Link>
-              <Link to="/signup" className="bg-white border border-primary-gold text-primary-gold px-8 py-3 rounded-md hover:bg-primary-ivory">Sign up</Link>
             </div>
           </div>
           <div className="min-h-[360px] rounded-lg overflow-hidden bg-[url('/src/assets/hero.png')] bg-cover bg-center border border-primary-gold/10" />
