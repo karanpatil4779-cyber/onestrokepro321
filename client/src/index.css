@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-inter text-charcoal bg-primary-off-white;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-playfair;
+  }
+}
+
+.gold-border {
+  @apply border border-primary-gold;
+}
+
+.gold-btn {
+  @apply bg-primary-gold text-white px-6 py-2 rounded-md hover:bg-primary-gold-dark transition-colors duration-200;
+}
+
+.beige-card {
+  @apply bg-primary-beige border border-primary-ivory shadow-sm rounded-lg p-6;
+}
