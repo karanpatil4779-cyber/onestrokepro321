@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
-import api from '../services/api';
+import { findUserByPhone, saveUser } from '../data/localStore';
 import toast from 'react-hot-toast';
 
 const Login = () => {
@@ -9,24 +9,26 @@ const Login = () => {
   const { setUser } = useAuth();
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleLogin = (e) => {
     e.preventDefault();
-    try {
-      const res = await api.post('/auth/login', { phone });
-      localStorage.setItem('token', res.data.token);
-      setUser(res.data.user);
-      toast.success('Login successful!');
+    const user = findUserByPhone(phone) || saveUser({
+      _id: `customer_${Date.now()}`,
+      role: 'customer',
+      phone,
+      fullName: 'Guest Customer',
+      city: 'India',
+      wallet: { balance: 0 },
+    });
 
-      const role = res.data.user.role;
-      if (role === 'provider') {
-        navigate('/provider/dashboard');
-      } else if (role === 'admin') {
-        navigate('/admin/dashboard');
-      } else {
-        navigate('/customer/dashboard');
-      }
-    } catch (err) {
-      toast.error(err.response?.data?.msg || 'Login failed. Please register first.');
+    setUser(user);
+    toast.success('Login successful!');
+
+    if (user.role === 'provider') {
+      navigate('/provider/dashboard');
+    } else if (user.role === 'admin') {
+      navigate('/admin/dashboard');
+    } else {
+      navigate('/customer/dashboard');
     }
   };
 
@@ -35,7 +37,7 @@ const Login = () => {
       <div className="bg-white p-8 rounded-xl shadow-lg max-w-md w-full">
         <h2 className="text-3xl font-bold mb-4 text-center text-primary-gold">Login</h2>
         <p className="text-sm text-charcoal/70 mb-6 text-center">
-          Enter your registered phone number to login quickly.
+          Enter any phone number. The frontend demo stores your session in this browser.
         </p>
         <form onSubmit={handleLogin} className="space-y-4">
           <div>

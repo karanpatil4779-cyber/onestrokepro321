@@ -2,11 +2,9 @@
   "name": "onestrokepro",
   "private": true,
   "scripts": {
-    "server": "npm --prefix server run start",
     "client": "npm --prefix client run dev -- --host 0.0.0.0",
-    "dev": "concurrently \"npm --prefix server run start\" \"npm --prefix client run dev -- --host 0.0.0.0\""
-  },
-  "devDependencies": {
-    "concurrently": "^8.2.0"
+    "dev": "npm --prefix client run dev -- --host 0.0.0.0",
+    "build": "npm --prefix client run build",
+    "lint": "npm --prefix client run lint"
   }
 }
